@@ -65,7 +65,7 @@ class combining(Node):
             ctr = self.get_center(labels)
         except:
             print('exception with getting the center')
-        rgb = self.get_rgb(nowlabel, ctr)
+        rgb = self.pixelpick(ctr[0][0], ctr[0][1], ctr[0][2])
         for i in range(ra):
             #grab color once for unique labels, from center point, reuse color until new unique label
 
@@ -73,7 +73,7 @@ class combining(Node):
                 nowlabel = int(labels[i])
                 for ele in ctr:
                     if nowlabel == ele[3]:
-                        rgb = self.get_rgb(nowlabel, ctr)
+                        rgb = self.pixelpick(ctr[nowlabel][0], ctr[nowlabel][1], ctr[nowlabel][2])
                         print('r: ', rgb, ' label: ', int(labels[i]))
 
             pts.append([x[i], y[i], z[i], rgb, int(labels[i])])
@@ -98,7 +98,7 @@ class combining(Node):
             fx = [i[0] for i in filtered]
             fy = [i[1] for i in filtered]
             fz = [i[2] for i in filtered]    
-            c = ((min(fx) + max(fx)) / 2, (min(fy) + max(fy))/2, (min(fz) + max(fz))/2, label, max(fx), min(fy), max(fy), min(fz), max(fz))    
+            c = ((min(fx) + max(fx)) / 2, (min(fy) + max(fy))/2, (min(fz) + max(fz))/2, label)    
             centerpoints.append(c)
         centerpoints = np.array(centerpoints)
         return centerpoints
@@ -173,19 +173,11 @@ class combining(Node):
         g = self.cv_image[location_h][location_w][1]
         b = self.cv_image[location_h][location_w][0] 
 
-
-        
-        
-
         rgb_values = (r << 16) | ( g << 8) | b
 
-        return r, g, b
+        return rgb_values
     
-    def get_rgb(self, nowlabel, obj_info):
-        print('hi')
-
-
-        
+      
 
 def main(args=None):
     rclpy.init(args=args)
