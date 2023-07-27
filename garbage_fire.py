@@ -32,7 +32,7 @@ class combining(Node):
         self.xyz = point_cloud2.read_points(msg, field_names=('x','y','z','label'))
         #self.get_logger().info('I heard: "%s"' % (self.xyz))
 
-        self.xyz.sort(order='label')
+        self.xyz.sort(order=['label', 'z', 'y', 'x'])
 
         x = self.xyz['x']
         y = self.xyz['y']
@@ -59,22 +59,20 @@ class combining(Node):
         
         #new for loop to add stuff to the list pts
         pts = []
-        nowlabel = int(labels[0])
-        ctr = []
-        try: 
-            ctr = self.get_center(labels)
-        except:
-            print('exception with getting the center')
-        rgb = self.pixelpick(ctr[0][0], ctr[0][1], ctr[0][2])
+        nowlabel = -1
+        j = 0
         for i in range(ra):
-            #grab color once for unique labels, from center point, reuse color until new unique label
-
+            
             if int(labels[i]) != nowlabel:
                 nowlabel = int(labels[i])
-                for ele in ctr:
-                    if nowlabel == ele[3]:
-                        rgb = self.pixelpick(ctr[nowlabel][0], ctr[nowlabel][1], ctr[nowlabel][2])
-                        print('r: ', rgb, ' label: ', int(labels[i]))
+                j = 0
+                rgb = self.pixelpick(x[i], y[i], z[i])
+
+            if j > 50:
+                j = 0
+                rgb = self.pixelpick(x[i], y[i], z[i])
+
+            j = j+1
 
             pts.append([x[i], y[i], z[i], rgb, int(labels[i])])
 
@@ -118,21 +116,30 @@ class combining(Node):
         img_h = 512
         img_w = 896
 
-        cam_h_fov = 80
-        cam_w_fov = 120
+        cam_h_fov = 70
+        cam_w_fov = 110
+
+        #r, g, b = 0.7490196078431373, 0.5607843137254902, 0.8470588235294118
 
         if x <= 0:
             print('object too close to lidar, please clean the lens')
             rgb_values = (1 << 16) | (0 << 8) | 0
             return rgb_values
 
-        h_theta = np.arctan2(z,x)*(180/3.14159)
-        w_theta = np.arctan2(y,x)*(180/3.14159)
+        h_theta = np.arctan2(z,x)*(180/np.pi)
+        w_theta = np.arctan2(y,x)*(180/np.pi)
 
         if (h_theta/int(cam_h_fov/2)) > 1:
             rgb_values = (1 << 16) | (0 << 8) | 0
             return rgb_values
         if (w_theta/int(cam_w_fov/2)) > 1:
+            rgb_values = (1 << 16) | (0 << 8) | 0
+            return rgb_values
+        
+        if (h_theta/int(cam_h_fov/2)) < -1:
+            rgb_values = (1 << 16) | (0 << 8) | 0
+            return rgb_values
+        if (w_theta/int(cam_w_fov/2)) < -1:
             rgb_values = (1 << 16) | (0 << 8) | 0
             return rgb_values
 
@@ -166,15 +173,13 @@ class combining(Node):
             rgb_values = (0 << 16) | (1 << 8) | 0
             return rgb_values
         
-        # make sure that x and y are integer values
-        #print('x: ', location_w, ' y: ', location_h)
+        print('x: ', location_w, ' y: ', location_h)
 
         r = self.cv_image[location_h][location_w][2]
         g = self.cv_image[location_h][location_w][1]
-        b = self.cv_image[location_h][location_w][0] 
+        b = self.cv_image[location_h][location_w][0]
 
-        rgb_values = (r << 16) | ( g << 8) | b
-
+        rgb_values = (r << 16) | (g << 8) | b
         return rgb_values
     
       
