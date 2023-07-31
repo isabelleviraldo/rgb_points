@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>colorMapping</name>
+  <name>rgb_points</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="jonmaz@todo.todo">jonmaz</maintainer>
+  <maintainer email="isabelleviraldo@gmail.com">isabelleviraldo/maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
