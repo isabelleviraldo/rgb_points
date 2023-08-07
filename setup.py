@@ -20,10 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'read_pcl = rgb_points.reading_point_cloud:main',
-            'read_img = rgb_points.reading_image:main',
-            'read_obj = rgb_points.reading_clusters:main',
-            'test_math = rgb_points.math:main',
             'color_points_v1 = rgb_points.initial_attempt:main',
             'color_points_new_math = rgb_points.fixed_math:main',
             'color_points_center = rgb_points.color_objects_using_center:main',
