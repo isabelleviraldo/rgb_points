@@ -3,7 +3,7 @@ to run the code, do once: $ ros2 run rgb_points <choose from below>
 
 all of these need lidar and video feed, so run a ROS2 bag file
 
-color_points_v1   --> first attempt to color the point cloud
+color_points_v1       --> first attempt to color the point cloud
 color_points_new_math --> fixed the math from version 1, but somehow *worse???*
 color_points_center   --> colors the objects detected based off of the centerpoint of the object (MUST PLAY AHC AHC_node)
 garbage_fire_testing  --> my main testing file, currently is coloring every 50 points within an object the same color (MUST PLAY AHC AHC_node)
