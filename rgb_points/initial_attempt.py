@@ -32,7 +32,7 @@ class combining(Node):
         self.cloudsub #only to prevent warning for unused variable?
         self.colorsub #only to prevent warning for unused variable?
 
-        self.pub_testing = self.create_publisher(PointCloud2, '/rgb_pointcloud', 10)
+        self.pub_testing = self.create_publisher(PointCloud2, '/rgb_points/testing', 10)
 
 
     def cloud_callback(self, msg):
