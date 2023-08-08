@@ -21,7 +21,7 @@ class combining(Node):
     def __init__(self):
         super().__init__('cloud_subscriber')
         self.cloudsub = self.create_subscription(PointCloud2, 'lidar_0/m1600/pcl2', self.cloud_callback, 10)
-        self.colorsub = self.create_subscription(Image, '/zed2i/zed_node/left/image_rect_color', self.color_callback, 10)
+        self.colorsub = self.create_subscription(Image, '/zed2i/zed_node/right/image_rect_color', self.color_callback, 10)
         self.cloudsub #only to prevent warning for unused variable?
         self.colorsub #only to prevent warning for unused variable?
 
@@ -76,7 +76,7 @@ class combining(Node):
         #setting const variables of WAM-V mount
         #the cam is using the left lens, match lengths accordingly
         zdiff = 0.04 #diff in height from center of lidar to center of cam lens (meters)
-        ydiff = 0.06 #diff in left to right from center of lidar to cam lens (meters)
+        ydiff = -0.06 #diff in left to right from center of lidar to cam lens (meters)
         xdiff = 0.1    #diff in forward to backward of lidar front center and cam lens front center (meters)
 
         x = x - xdiff
