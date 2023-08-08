@@ -81,7 +81,7 @@ class combining(Node):
         header = Header()
         # header.stamp = rclpy.time.Time.now()
         header.stamp = self.get_clock().now().to_msg()
-        header.frame_id = "lidar_0"
+        header.frame_id = 'zed2i_left_camera_frame'
         rgb_processed = point_cloud2.create_cloud(header, fields, pts)
         self.get_logger().info('published my new point cloud')
         self.pub_testing.publish(rgb_processed)
