@@ -143,7 +143,7 @@ class combining(Node):
             rgb_values = (0 << 16) | (1 << 8) | 0
             return rgb_values
         
-        print('x: ', location_w, ' y: ', location_h)
+        #print('x: ', location_w, ' y: ', location_h)
 
         r = self.cv_image[location_h][location_w][2]
         g = self.cv_image[location_h][location_w][1]
