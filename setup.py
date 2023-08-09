@@ -20,10 +20,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'color_points_v1 = rgb_points.initial_attempt:main',
-            'color_points_new_math = rgb_points.fixed_math:main',
-            'color_points_center = rgb_points.color_objects_using_center:main',
-            'garbage_fire_testing = rgb_points.garbage_fire:main'
+            'cp_v1 = rgb_points.initial_attempt:main',
+            'cp_new_math = rgb_points.fixed_math:main',
+            'cp_center = rgb_points.color_objects_using_center:main',
+            'cp_few_colors = rgb_points.garbage_fire:main'
         ],
     },
 )
