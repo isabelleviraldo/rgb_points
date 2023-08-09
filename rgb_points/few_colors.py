@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-
 from std_msgs.msg import Header
 from sensor_msgs.msg import Image
-
 import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge
 bridge = CvBridge()
-
 import rclpy
 from rclpy.node import Node
-
 from sensor_msgs.msg import PointCloud2, PointField
 from sensor_msgs_py import point_cloud2
 
@@ -32,7 +28,7 @@ class combining(Node):
         self.xyz = point_cloud2.read_points(msg, field_names=('x','y','z','label'))
         #self.get_logger().info('I heard: "%s"' % (self.xyz))
 
-        self.xyz.sort(order=['label', 'z', 'y', 'x'])
+        self.xyz.sort(order = 'label')
 
         x = self.xyz['x']
         y = self.xyz['y']
@@ -68,7 +64,7 @@ class combining(Node):
                 j = 0
                 rgb = self.pixelpick(x[i], y[i], z[i])
 
-            if j > 50:
+            if j > 30:
                 j = 0
                 rgb = self.pixelpick(x[i], y[i], z[i])
 
@@ -82,6 +78,7 @@ class combining(Node):
         header.frame_id = 'zed2i_left_camera_frame'
         rgb_processed = point_cloud2.create_cloud(header, fields, pts)
         self.get_logger().info('published my new point cloud')
+        print(pts[0])
         self.pub_testing.publish(rgb_processed)
 
         return self
@@ -173,7 +170,7 @@ class combining(Node):
             rgb_values = (0 << 16) | (1 << 8) | 0
             return rgb_values
         
-        print('x: ', location_w, ' y: ', location_h)
+        #print('x: ', location_w, ' y: ', location_h)
 
         r = self.cv_image[location_h][location_w][2]
         g = self.cv_image[location_h][location_w][1]
