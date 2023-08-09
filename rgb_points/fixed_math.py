@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-
 from std_msgs.msg import Header
 from sensor_msgs.msg import Image
-
 import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge
 bridge = CvBridge()
-
 import rclpy
 from rclpy.node import Node
-
 from sensor_msgs.msg import PointCloud2, PointField
 from sensor_msgs_py import point_cloud2
 
@@ -20,7 +16,7 @@ class combining(Node):
 
     def __init__(self):
         super().__init__('cloud_subscriber')
-        self.cloudsub = self.create_subscription(PointCloud2, 'lidar_0/m1600/pcl2', self.cloud_callback, 10)
+        self.cloudsub = self.create_subscription(PointCloud2, 'lidar_0/AHC/clusters', self.cloud_callback, 10)
         self.colorsub = self.create_subscription(Image, '/zed2i/zed_node/left/image_rect_color', self.color_callback, 10)
         self.cloudsub #only to prevent warning for unused variable?
         self.colorsub #only to prevent warning for unused variable?
@@ -29,15 +25,16 @@ class combining(Node):
 
 
     def cloud_callback(self, msg):
-        self.xyz = point_cloud2.read_points(msg, field_names=('x','y','z'))
+        self.xyz = point_cloud2.read_points(msg, field_names=('x','y','z','label'))
         #self.get_logger().info('I heard: "%s"' % (self.xyz))
 
         x = self.xyz['x']
         y = self.xyz['y']
         z = self.xyz['z']
+        labels = self.xyz['label']
         
         try:
-            self.create_testing_and_pub(x, y, z, msg.width)
+            self.create_testing_and_pub(x, y, z, labels, msg.width)
         except:
             print('did exception')
         #exit()
@@ -48,18 +45,19 @@ class combining(Node):
         self.get_logger().info('hello from color_callback')
 
 
-    def create_testing_and_pub(self, x, y, z, ra):
+    def create_testing_and_pub(self, x, y, z, labels, ra):
         fields = [ PointField(name = 'x'    , offset =  0, datatype = PointField.FLOAT32, count = 1), 
                    PointField(name = 'y'    , offset =  4, datatype = PointField.FLOAT32, count = 1),
                    PointField(name = 'z'    , offset =  8, datatype = PointField.FLOAT32, count = 1),
-                   PointField(name = 'rgb'  , offset = 12, datatype = PointField.UINT32 , count = 1) ]
+                   PointField(name = 'rgb'  , offset = 12, datatype = PointField.UINT32 , count = 1),
+                   PointField(name = 'label', offset = 16, datatype = 1                 , count = 1) ]
         
         #new for loop to add stuff to the list pts
         pts = []
         for i in range(ra):
             rgb = self.pixelpick(x[i], y[i], z[i])
             #breakpoint()
-            pts.append([x[i], y[i], z[i], rgb])
+            pts.append([x[i], y[i], z[i], rgb, int(labels[i])])
 
         header = Header()
         # header.stamp = rclpy.time.Time.now()
@@ -67,6 +65,7 @@ class combining(Node):
         header.frame_id = 'zed2i_left_camera_frame'
         rgb_processed = point_cloud2.create_cloud(header, fields, pts)
         self.get_logger().info('published my new point cloud')
+        print(pts[0])
         self.pub_testing.publish(rgb_processed)
 
         return self
