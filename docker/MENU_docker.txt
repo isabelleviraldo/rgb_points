@@ -1,8 +1,8 @@
 
-to run the code, do once: $ ros2 run rgb_points <choose from below>
+To run the code, do once: $ ros2 run rgb_points <choose from below>
 
-all of these need lidar and video feed, so run a ROS2 bag file
-All of these subscribe to AHC_node, please download the Dockerfile to run it here:
+All of these need lidar and video feed, and AHC_node MUST be running
+(do $ cat AHC_info.txt to find out more about AHC_node)
 
 cp_v1       --> first attempt to color the point cloud (MUST PLAY AHC AHC_node)
 cp_new_math --> fixed the math from version 1, but somehow *worse???* (MUST PLAY AHC AHC_node)
