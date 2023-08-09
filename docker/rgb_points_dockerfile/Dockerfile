@@ -145,7 +145,7 @@ RUN ["/bin/bash", "-c", "source /opt/ros/${ROS_DISTRO}/setup.bash &&  echo ${AME
 RUN mkdir -p $ROS_2_WS/src
 #how docker likes to change working directory. RUN cd might also work...
 WORKDIR $ROS_2_WS/src
-RUN ros2 pkg create --build-type ament_python  rgb_points  --dependencies rclpy
+RUN ros2 pkg create --build-type ament_python  rgb_points  #--dependencies rclpy
 #make dir for cloning package. I had trouble taking it straight into src/rgb_points
 WORKDIR $ROS_2_WS/src/temp
 
