@@ -23,7 +23,7 @@ setup(
             'cp_v1 = rgb_points.initial_attempt:main',
             'cp_new_math = rgb_points.fixed_math:main',
             'cp_center = rgb_points.color_objects_using_center:main',
-            'cp_few_colors = rgb_points.garbage_fire:main'
+            'cp_few_colors = rgb_points.few_colors:main'
         ],
     },
 )
