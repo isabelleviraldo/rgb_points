@@ -1,0 +1,15 @@
+
+*****All of the files here require AHC AHC_node to be running*****
+
+If AHC is downloaded, in a new terminal on your device, go to where it is stored. 
+Then colcon build it and run it using $ ros2 run AHC AHC_node, so long as a ros2 
+is running with lidar and zed camera info, these programs can work and you can go
+to the MENU to run the code.
+
+-or-
+
+If AHC is NOT downloaded, go to the following github file and download it, its a
+Dockerfile specifically to run AHC AHC_node, once built using docker follow its
+instructions in the READ_ME
+
+https://github.com/isabelleviraldo/rgb_points/blob/main/dockerfiles/AHC_docker/Dockerfile
