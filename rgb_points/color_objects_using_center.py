@@ -38,7 +38,7 @@ class combining(Node):
         try:
             self.create_testing_and_pub(x, y, z, labels, msg.width)
         except:
-            print('did exception')
+            print('couldnt map colors to point cloud')
         #exit()
 
     def color_callback(self, msg):
