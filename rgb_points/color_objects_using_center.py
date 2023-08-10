@@ -35,6 +35,8 @@ class combining(Node):
         z = self.xyz['z']
         labels = self.xyz['label']
 
+        self.get_logger().info('hello from cloud_callback')
+        
         try:
             self.create_testing_and_pub(x, y, z, labels, msg.width)
         except:
