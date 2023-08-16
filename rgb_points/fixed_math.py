@@ -80,11 +80,11 @@ class projectColor(Node):
         self.init_h = (self.img_h / 2) - 1
 
     # get rgb for each point, then publish the new point cloud
-    def build_colored_pc(self, x, y, z, label, pc_range):
+    def build_colored_pc(self, x, y, z, label, cp_range):
         
         pts = []
         # for each point in the point cloud
-        for i in range(pc_range):
+        for i in range(cp_range):
             # set rgb for this point
             # adjusting for offset from center of lidar to center of zed2i's left camera
             rgb = self.pixelpick((x[i] - self.xdiff), (y[i] - self.ydiff), (z[i] - self.zdiff))
