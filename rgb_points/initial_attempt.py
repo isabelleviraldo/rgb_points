@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import rclpy
+from rclpy.node import Node
 import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge
 bridge = CvBridge()
 
-from rclpy.node import Node
 from std_msgs.msg import Header
 from sensor_msgs.msg import Image, PointCloud2, PointField
 from sensor_msgs_py import point_cloud2 #point_cloud2 reads pointcloud info
@@ -13,18 +13,7 @@ from sensor_msgs_py import point_cloud2 #point_cloud2 reads pointcloud info
 
 class projectColor(Node):
     def __init__(self):
-        super().__init__('cloud_subscriber')
-
-        # subscriber to the point cloud published by AHC_node
-        self.cloudsub = self.create_subscription(PointCloud2, '/lidar_0/AHC/clusters', self.cloud_callback, 10)
-        self.cloudsub #only to prevent warning for unused variable?
-
-        # subscriber to zed camera's left camera image
-        self.colorsub = self.create_subscription(Image, '/zed2i/zed_node/left/image_rect_color', self.color_callback, 10)
-        self.colorsub #only to prevent warning for unused variable?
-
-        # publisher for colored point cloud as '/rgb_points/testing' with (x, y, z, rgb, label) data for each point
-        self.publish_colored_pc = self.create_publisher(PointCloud2, '/rgb_points/testing', 10)
+        super().__init__('pc_img_subscriber')
 
         #######################################
         ####    initialising parameters    ####
@@ -51,20 +40,33 @@ class projectColor(Node):
                         PointField(name = 'rgb'  , offset = 12, datatype = PointField.UINT32 , count = 1),
                         PointField(name = 'label', offset = 16, datatype = 1                 , count = 1) ]
 
+        
+        
+        # subscriber to the point cloud published by AHC_node
+        self.cloudsub = self.create_subscription(PointCloud2, '/lidar_0/AHC/clusters', self.cloud_callback, 10)
+        self.cloudsub #only to prevent warning for unused variable?
+
+        # subscriber to zed camera's left camera image
+        self.colorsub = self.create_subscription(Image, '/zed2i/zed_node/left/image_rect_color', self.color_callback, 10)
+        self.colorsub #only to prevent warning for unused variable?
+
+        # publisher for colored point cloud as '/rgb_points/testing' with (x, y, z, rgb, label) data for each point
+        self.publish_colored_pc = self.create_publisher(PointCloud2, '/rgb_points/testing', 10)
+
     # converts point cloud data to array
     def cloud_callback(self, msg):
         self.xyz = point_cloud2.read_points(msg, field_names=('x','y','z','label'))
         self.get_logger().info('hello from cloud_callback')
-
+        
         # labeling the field types
         x = self.xyz['x']
         y = self.xyz['y']
         z = self.xyz['z']
         label = self.xyz['label']
         
+        # sends point cloud info to be published
         try:
-            # sends point cloud info to be published
-            self.publish_colored_pc(x, y, z, label, msg.width)
+            self.build_colored_pc(x, y, z, label, msg.width)
         except:
             print('couldnt map colors to point cloud')
         
@@ -74,23 +76,23 @@ class projectColor(Node):
         self.cv_image = bridge.imgmsg_to_cv2(msg, 'bgra8')
 
         # get image quality for later use
-        self.img_h = self.cv_image.shape[0]
-        self.img_w = self.cv_image.shape[1]
+        self.img_w = msg.width
+        self.img_h = msg.height
         self.init_w = (self.img_w / 2) - 1
         self.init_h = (self.img_h / 2) - 1
-
+    
     # get rgb for each point, then publish the new point cloud
-    def publish_colored_pc(self, x, y, z, label, pc_range):        
+    def build_colored_pc(self, x, y, z, label, pc_range):        
         
         # for each point in the point cloud
         pts = []
         for i in range(pc_range):
             # set rgb for this point
-            rgb = self.pixelpick(x[i], y[i], z[i])
+            # adjusting for offset from center of lidar to center of zed2i's left camera
+            rgb = self.pixelpick((x[i] - self.xdiff), (y[i] - self.ydiff), (z[i] - self.zdiff))
 
             # add point with color to array with (x, y, z, rgb, label)
-            # adjusting for offset from center of lidar to center of zed2i's left camera
-            pts.append([x[i] - self.xdiff, y[i] - self.ydiff, z[i] - self.zdiff, rgb, int(label[i])])
+            pts.append([x[i], y[i], z[i], rgb, int(label[i])])
 
         ##### format copied from Tyler's code, publishing new point cloud #####
         header = Header()
