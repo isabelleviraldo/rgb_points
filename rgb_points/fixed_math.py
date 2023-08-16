@@ -101,7 +101,8 @@ class projectColor(Node):
         self.publish_colored_pc.publish(rgb_processed)
 
         return self
-    
+
+    # math finding where the 3D point exists on the 2D image
     def pixelpick(self, x, y, z):
 
         if x <= 0: # never divide by 0, but also nothing should be negative
