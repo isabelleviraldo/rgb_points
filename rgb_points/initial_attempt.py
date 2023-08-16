@@ -75,7 +75,7 @@ class projectColor(Node):
         self.get_logger().info('hello from color_callback')
         self.cv_image = bridge.imgmsg_to_cv2(msg, 'bgra8')
 
-        # get image quality for later use
+        # get image quality for later use + setup reference point
         self.img_w = msg.width
         self.img_h = msg.height
         self.init_w = (self.img_w / 2) - 1
@@ -84,8 +84,8 @@ class projectColor(Node):
     # get rgb for each point, then publish the new point cloud
     def build_colored_pc(self, x, y, z, label, pc_range):        
         
-        # for each point in the point cloud
         pts = []
+        # for each point in the point cloud
         for i in range(pc_range):
             # set rgb for this point
             # adjusting for offset from center of lidar to center of zed2i's left camera
@@ -111,18 +111,18 @@ class projectColor(Node):
         x = x / 2
 
         if x <= 0: # never divide by 0, but also nothing should be negative
-            self.get_logger().warn('Object detected too close, please clean lidar and zed cam')
-            rgb_values = (1 << 16) | (0 << 8) | 0
-            return rgb_values
+            print('object too close to lidar, please clean the lens')
+            rgb_value = (1 << 16) | (0 << 8) | 0
+            return rgb_value
         
-        # Finds angle between object and lans
+        # Finds angle between object and lens
         w_theta = np.arctan(y/x)
         h_theta = np.arctan(z/x)
 
         # calculate pixel dist from center
         if w_theta / self.cam_w_fov > 1:
-            rgb_values = (1 << 16) | (0 << 8) | 0
-            return rgb_values
+            rgb_value = (1 << 16) | (0 << 8) | 0
+            return rgb_value
         else:
             # REALLY BAD MATH, WHO DOES THIS?
             # was *trying* to calculate the pixel dist by taking the ratio diff between max
@@ -130,8 +130,8 @@ class projectColor(Node):
             # instead I ended up with this garbage
             w_pixel = w_theta / self.cam_w_fov / 2 * self.img_w / 2
         if w_theta / self.cam_w_fov > 1:
-            rgb_values = (1 << 16) | (0 << 8) | 0
-            return rgb_values
+            rgb_value = (1 << 16) | (0 << 8) | 0
+            return rgb_value
         else:
             # REALLY BAD MATH, WHO DOES THIS?
             # was *trying* to calculate the pixel dist by taking the ratio diff between max
@@ -155,6 +155,8 @@ class projectColor(Node):
         r = self.cv_image[new_h][new_w][2]
         g = self.cv_image[new_h][new_w][1]
         b = self.cv_image[new_h][new_w][0]
+
+        # ros2 can take a single float type for rgb with this format
         rgb_value = (r << 16) | (g << 8) | b
 
         return rgb_value
