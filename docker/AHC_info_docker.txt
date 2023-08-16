@@ -9,7 +9,7 @@ to the MENU to run the code.
 -or-
 
 If AHC is NOT downloaded, go to the following github file and download it, its a
-Dockerfile specifically to run AHC AHC_node, once built using docker follow its
+Dockerfile specifically to run AHC AHC_node, once built using docker, follow its
 instructions in the READ_ME
 
 https://github.com/isabelleviraldo/rgb_points/blob/main/docker/AHC_dockerfile/Dockerfile
