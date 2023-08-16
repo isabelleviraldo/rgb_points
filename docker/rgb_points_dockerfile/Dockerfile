@@ -131,7 +131,7 @@ RUN colcon build --symlink-install
 # RUN ["/bin/bash", "-c", "source /opt/ros/${ROS_DISTRO}/setup.bash"]
 RUN ["/bin/bash", "-c", "source install/setup.bash"]
 
-RUN echo "in each window, do $ source /opt/ros2_ws/install/setup.bash" >> readme.txt
+#RUN echo "in each window, do $ source /opt/ros2_ws/install/setup.bash" >> readme.txt
 RUN curl -o rgb_points_README.txt -L https://raw.githubusercontent.com/isabelleviraldo/rgb_points/main/docker/README_docker.txt
 RUN curl -o rgb_points_MENU.txt -L https://raw.githubusercontent.com/isabelleviraldo/rgb_points/main/docker/MENU_docker.txt
 RUN curl -o rgb_points_AHC_info.txt -L https://raw.githubusercontent.com/isabelleviraldo/rgb_points/main/docker/AHC_info_docker.txt
