@@ -79,17 +79,17 @@ class projectColor(Node):
         self.init_w = (self.img_w / 2) - 1
         self.init_h = (self.img_h / 2) - 1
 
-    #get rgb for each point, then publish the new point cloud
+    # get rgb for each point, then publish the new point cloud
     def publish_colored_pc(self, x, y, z, label, pc_range):        
         
-        #for each point in the point cloud
+        # for each point in the point cloud
         pts = []
         for i in range(pc_range):
-            #set rgb for this point
+            # set rgb for this point
             rgb = self.pixelpick(x[i], y[i], z[i])
 
-            #add point with color to array with (x, y, z, rgb, label)
-            #adjusting for offset from center of lidar to center of zed2i's left camera
+            # add point with color to array with (x, y, z, rgb, label)
+            # adjusting for offset from center of lidar to center of zed2i's left camera
             pts.append([x[i] - self.xdiff, y[i] - self.ydiff, z[i] - self.zdiff, rgb, int(label[i])])
 
         ##### format copied from Tyler's code, publishing new point cloud #####
@@ -102,8 +102,8 @@ class projectColor(Node):
 
         return self
     
-    #math finding where the 3D point exists on the 2D image
-    #this math is not good, however, produces a nicer outcome than the fixed math
+    # math finding where the 3D point exists on the 2D image
+    # this math is not good, however, produces a nicer outcome than the fixed math
     def pixelpick(self, x, y, z):
         # below was done as debugging, and for whatever reason this works out nicer
         x = x / 2
@@ -117,7 +117,7 @@ class projectColor(Node):
         w_theta = np.arctan(y/x)
         h_theta = np.arctan(z/x)
 
-        #calculate pixel dist from center
+        # calculate pixel dist from center
         if w_theta / self.cam_w_fov > 1:
             rgb_values = (1 << 16) | (0 << 8) | 0
             return rgb_values
