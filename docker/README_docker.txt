@@ -1,6 +1,6 @@
 
 ***in each window, do $ source /opt/ros2_ws/install/setup.bash***
-MUST BE RUNNING ROS WITH LIDAR AND ZED CAMERA
+MUST BE RUNNING LIDAR AND ZED CAMERA
 MUST BE RUNNING AHC AHC_node: do $ cat AHC_info.txt for details
 
 - to run the node, do once: $ ros2 run rgb_points <do $ cat MENU.txt to see options>
