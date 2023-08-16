@@ -22,7 +22,7 @@ class projectColor(Node):
         # parameters for pixelpick()
         self.cam_w_fov = 110 # zed2i camera width fov is 110 degrees
         self.cam_h_fov = 70 # zed2i camera height fov is 70 degrees
-        self.lidar_w_fov = 120 #lidar width fov is 120 degrees        # unused variable
+        self.lidar_w_fov = 120 # lidar width fov is 120 degrees       # unused variable
         self.lidar_h_fov = 32 # lidar height fov is 32 degrees        # unused variable
         
         # setting const variables of WAM-V mount
