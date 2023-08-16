@@ -159,9 +159,9 @@ class projectColor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    combining_sub = projectColor()
-    rclpy.spin(combining_sub)
-    combining_sub.destroy_node()
+    rgb_pc_pub = projectColor()
+    rclpy.spin(rgb_pc_pub)
+    rgb_pc_pub.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
