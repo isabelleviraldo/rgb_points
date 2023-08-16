@@ -22,8 +22,8 @@ class projectColor(Node):
         # parameters for pixelpick()
         self.cam_w_fov = 1.10 # zed2i camera width fov is 110 degrees
         self.cam_h_fov = 0.70 # zed2i camera height fov is 70 degrees
-        self.lidar_w_fov = 1.20 #lidar width fov is 120 degrees
-        self.lidar_h_fov = 0.32 # lidar width fov is 32 degrees
+        self.lidar_w_fov = 1.20 #lidar width fov is 120 degrees       # unused variable
+        self.lidar_h_fov = 0.32 # lidar height fov is 32 degrees      # unused variable
         # During initial testing I thought that an arctan function was returning 360 degrees 
         # as 3.60, but it was actually returning radians, this is why the math isn't accurate
 
