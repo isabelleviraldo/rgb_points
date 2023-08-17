@@ -14,7 +14,7 @@ Release Date: 08/18/2023
 	- [fixed_math](#fixed_math)
   - [color_objects_using_center](#color_objects_using_center)
   - [few_colors](#few_colors)
-- [Inputs and Outputs](#inputs-and-outputs)
+- [TODO](#todo)
 
 ## Intro
 
@@ -66,20 +66,48 @@ Inputs:
 Output: 
 - /rgb_points/testing (Point Cloud)
 
-
 ### initial_attempt
 
+Once within docker, to run this node do:
+
+```sh
+$ ros2 run rgb_points cp_v1
+```
+
+This was the initial attempt to color the points, the math written is very inaccurate for a few reasons
+
+1. The tan function outputs radians, and I didn't realise that
+2. I instead put in my degrees as decimal points (125 as 1.25)
+3. There are 2 lines without any parenthesis when multiplying and dividing
+, but for whatever reason, this iteration of attempts
 
 ### fixed_math
+
+Once within docker, to run this node do:
+
+```sh
+$ ros2 run rgb_points cp_new_math
+```
+
 
 
 ### color_objects_using_center
 
+Once within docker, to run this node do:
+
+```sh
+$ ros2 run rgb_points cp_v1_center
+```
 
 ### few_colors
 
+Once within docker, to run this node do:
 
-## Inputs and Outputs
+```sh
+$ ros2 run rgb_points cp_few_colors
+```
+
+## Todo
 
 
  
