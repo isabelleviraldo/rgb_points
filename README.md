@@ -106,7 +106,7 @@ $ ros2 run rgb_points cp_new_math
 Once within docker, to run this node do:
 
 ```sh
-$ ros2 run rgb_points cp_v1_center
+$ ros2 run rgb_points cp_center
 ```
 
 ### few_colors
