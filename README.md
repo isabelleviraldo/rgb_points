@@ -23,10 +23,10 @@ Release Date: 08/18/2023
 
 To run rgb_points, you can build [this Dockerfile](https://github.com/isabelleviraldo/rgb_points/blob/main/docker/rgb_points_dockerfile/Dockerfile) on a device with an NVIDIA card
 
-To open a new window on any Docker container do:
+Or, alternatively, download whichever file seems to fit what you want, and then run them using:
 
 ```sh
-$ docker exec -it <container_name> bash
+$ python3 <file name>
 ```
 
 Once built, each window must do:
