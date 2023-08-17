@@ -9,6 +9,7 @@ Release Date: 08/18/2023
 
 - [Intro](#intro)
 - [Running rgb_points](#running-rgb_points)
+- [Docker](#docker)
 - [Nodes In Depth](#nodes-in-depth)
 	- [initial_attempt](#initial_attempt)
 	- [fixed_math](#fixed_math)
@@ -21,15 +22,17 @@ Release Date: 08/18/2023
 
 ## Running rgb_points
 
-To run rgb_points, you can build [this Dockerfile](https://github.com/isabelleviraldo/rgb_points/blob/main/docker/rgb_points_dockerfile/Dockerfile) on a device with an NVIDIA card
-
-Or, alternatively, download whichever file seems to fit what you want, and then run them using:
+If all dependancies are installed (found here), then you can download any file directly and run it using:
 
 ```sh
 $ python3 <file name>
 ```
 
-Once built, each window must do:
+Or alternatively, to run rgb_points, you can build 
+[this Dockerfile](https://github.com/isabelleviraldo/rgb_points/blob/main/docker/rgb_points_dockerfile/Dockerfile)
+ on a device with an NVIDIA card
+
+Once Dockerfile is built, each window must do:
 
 ```sh
 $ source /opt/ros2_ws/install/setup.bash
@@ -54,6 +57,13 @@ $ cat MENU.txt
 
 When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
+## Docker
+
+To open a new window on any Docker container do:
+
+```sh
+$ docker exec -it <container_name> bash
+```
 
 ## Nodes In Depth
 
@@ -108,6 +118,3 @@ $ ros2 run rgb_points cp_few_colors
 ```
 
 ## Todo
-
-
- 
