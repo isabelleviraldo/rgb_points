@@ -16,8 +16,8 @@ Date Last Updated: 08/18/2023
 - [Nodes In Depth](#nodes-in-depth)
   - [initial_attempt](#initial_attempt)
   - [fixed_math](#fixed_math)
-  - [color_objects_using_center](#color_objects_using_center)
   - [few_colors](#few_colors)
+  - [color_objects_using_center](#color_objects_using_center)
 - [TODO](#todo)
 
 ## Intro
@@ -57,10 +57,10 @@ $ ros2 run rgb_points cp_v1
 $ ros2 run rgb_points cp_new_math
 ```
 ```sh
-$ ros2 run rgb_points cp_center
+$ ros2 run rgb_points cp_few_colors
 ```
 ```sh
-$ ros2 run rgb_points cp_few_colors
+$ ros2 run rgb_points cp_center
 ```
 
 When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
@@ -106,11 +106,13 @@ $ ros2 run rgb_points cp_v1
 $ ros2 run rgb_points cp_new_math
 ```
 ```sh
-$ ros2 run rgb_points cp_center
-```
-```sh
 $ ros2 run rgb_points cp_few_colors
 ```
+```sh
+$ ros2 run rgb_points cp_center
+```
+
+When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
 ## Nodes In Depth
 
@@ -119,11 +121,11 @@ $ ros2 run rgb_points cp_few_colors
 For all of the following, the inputs and outputs are as follows:
 
 Inputs: 
-- /lidar_0/AHC/clusters (Point Cloud)
-- /zed2i/zed_node/left/image_rect_color (Image)
+- /lidar_0/AHC/clusters (Point Cloud) (x, y, z, label)
+- /zed2i/zed_node/left/image_rect_color (Image) (b, g, r, a)
 
 Output: 
-- /rgb_points/testing (Point Cloud)
+- /rgb_points/testing (Point Cloud) (x, y, z, rgb, label)
 
 ### initial_attempt
 
@@ -132,6 +134,8 @@ Once your environment is set up, to run this node do:
 ```sh
 $ ros2 run rgb_points cp_v1
 ```
+
+When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
 This node will take the points from the point cloud published from the lidar, and uses each point as a reference to find the color associated with it from the zed camera using the point's location and comparing its location in space to its location relative to the camera.
 
@@ -154,19 +158,34 @@ Once your environment is set up, to run this node do:
 $ ros2 run rgb_points cp_new_math
 ```
 
+When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
+This was made to make the intended math actually run correctly as intended. All later nodes use this version of the math.
+
+Conseptually how the math works is by taking advantage of the camera's known fov, the lidar's known fov, the returned image's width and height, and if we know where a point is in space, then by taking its angle relative to the lens vertically and horizontally, we can find the pixel that is located at that angle horizontally and vertically. 
+
+The math as I have it coded within the function pixelpick() is as follows:
+
+1. Find angle between object and lens horizontally and vertically
+      - (use x, y, z of point and take arctan of width and height compared to distance)
+2. Find how far left or right/up or down the object is
+      - (taking a ratio of left/right angle by zed camera width fov, same with up/down angle and height fov)
+3. Find how many pixels from the center of the image that is
+      - (multiplying that ratio by half width or height of the image)
+4. Convert those numbers to be in reference of the top left of the image
+      - (subtract the distance from center from the center point)
+
+Now that it is the actual location, getting the rgb at that pixel is really simple. 
+
+To note, you want to frequently check that you never accedentally call for a pixel that isn't there, so I have a lot of lines where it will return a bright color if it is out of bounds.
+
+Additionally, always make sure that it is cast as an int before attempting to find the pixel in the array.
+
+Like said before in initial_attempt, this math produces a less accurate projection, it could be due to some coding oversight, or something inherently wrong with the consept. Some investivation is needed to determine why, because I could not figure it out myself, but it might remain a mystery.
+
+All later nodes use this math, because it actually completes the code as intended, even with the higher quality output by the initial attempt.
 
 Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/fixed_math.py)
-
-### color_objects_using_center
-
-Once your environment is set up, to run this node do:
-
-```sh
-$ ros2 run rgb_points cp_center
-```
-
-Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/color_objects_using_center.py)
 
 ### few_colors
 
@@ -176,6 +195,38 @@ Once your environment is set up, to run this node do:
 $ ros2 run rgb_points cp_few_colors
 ```
 
+When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
+
+This was made to explore the idea of reducing the number of times the code would run through the math while still ensuring it collected a useful amount of colors. 
+
+What was decided here was to instead of coloring each pixel individually, by taking labels published by the AHC node made by [@hazelrah2](https://github.com/hazelrah2) and only pick a new color every 30 points within an object. While also reducing the number of times running through the math, the output would include the object information.
+
+This has been shown to greatly increase the framerate of the program's output, as well as still color the object relevant colors. 
+
 Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/few_colors.py)
+
+### color_objects_using_center
+
+Once your environment is set up, to run this node do:
+
+```sh
+$ ros2 run rgb_points cp_center
+```
+
+When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
+
+This was made to explore the idea of reducing the number of times the code would run through the math even further by only taking the centerpoint of the object's color.
+
+This requires calculating the centerpoint of each object, which can be done by manually calculating the centerpoint of each object, as is done here. Alternatively, it could be done by subscribing to the topic being published by the AHC node made by [@hazelrah2](https://github.com/hazelrah2), 'lidar_0/AHC/centroids'
+
+
+
+
+
+
+
+
+
+Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/color_objects_using_center.py)
 
 ## Todo
