@@ -197,11 +197,17 @@ $ ros2 run rgb_points cp_few_colors
 
 When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
+This node uses the math as explained in [fixed_math](#fixed_math)
+
 This was made to explore the idea of reducing the number of times the code would run through the math while still ensuring it collected a useful amount of colors. 
 
 What was decided here was to instead of coloring each pixel individually, by taking labels published by the AHC node made by [@hazelrah2](https://github.com/hazelrah2) and only pick a new color every 30 points within an object. While also reducing the number of times running through the math, the output would include the object information.
 
 This has been shown to greatly increase the framerate of the program's output, as well as still color the object relevant colors. 
+
+If a more accurate way of picking the colors can be found, I would recommend using this strategy, because it has many ways it could be expanded upon, adjusting how many points are colored at once based on the size of the object, if a color is "unnatural", if it is approaching an area of intrest, etc.
+
+All of this however is done to try and compensate for the slow nature of the math done within my code, so if a fast, less computationally intensive 
 
 Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/few_colors.py)
 
@@ -215,9 +221,13 @@ $ ros2 run rgb_points cp_center
 
 When viewing rgb_points' output in rviz2, use [this configuration](https://github.com/isabelleviraldo/rgb_points/blob/main/rviz2/rgb_points_config.rviz)
 
+This node uses the math as explained in [fixed_math](#fixed_math)
+
 This was made to explore the idea of reducing the number of times the code would run through the math even further by only taking the centerpoint of the object's color.
 
 This requires calculating the centerpoint of each object, which can be done by manually calculating the centerpoint of each object, as is done here. Alternatively, it could be done by subscribing to the topic being published by the AHC node made by [@hazelrah2](https://github.com/hazelrah2), 'lidar_0/AHC/centroids'
+
+
 
 
 
