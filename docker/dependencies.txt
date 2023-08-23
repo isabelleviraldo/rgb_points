@@ -1,0 +1,13 @@
+Entire setup existed on an Ubuntu 22.04 
+
+Ros version used was ROS2 Iron
+(however has been tested to be compatible with ROS2 Humble, just proceed with caution)
+
+Dependencies:
+
+OpenCV
+rclpy
+numpy
+cv2
+scipy
+  
