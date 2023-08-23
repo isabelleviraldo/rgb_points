@@ -22,6 +22,8 @@ Date Last Updated: 08/18/2023
 
 ## Intro
 
+This consists the deliverable portion of the work I did as a 2023 summer intern, 
+
 ## Running rgb_points
 
 ### Requirements
@@ -181,9 +183,9 @@ To note, you want to frequently check that you never accedentally call for a pix
 
 Additionally, always make sure that it is cast as an int before attempting to find the pixel in the array.
 
-Like said before in initial_attempt, this math produces a less accurate projection, it could be due to some coding oversight, or something inherently wrong with the consept. Some investivation is needed to determine why, because I could not figure it out myself, but it might remain a mystery.
+Like said before in initial_attempt, this math produces a less accurate projection, it could be due to some coding oversight, or something inherently wrong with the consept. Some investivation is needed to determine why, because I could not figure it out myself..
 
-All later nodes use this math, because it actually completes the code as intended, even with the higher quality output by the initial attempt.
+All later nodes use this math, because it actually completes the math as intended within the code, even with the higher quality output by the initial attempt.
 
 Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/fixed_math.py)
 
@@ -227,16 +229,15 @@ This was made to explore the idea of reducing the number of times the code would
 
 This requires calculating the centerpoint of each object, which can be done by manually calculating the centerpoint of each object, as is done here. Alternatively, it could be done by subscribing to the topic being published by the AHC node made by [@hazelrah2](https://github.com/hazelrah2), 'lidar_0/AHC/centroids'
 
-
-
-
-
-
-
-
-
-
+This isn't a very good way to determine the color of the object based on how few colors it grabs, only one per object, which at some times would only be 1-5. This is just a concept to explore if there is a need for it.
 
 Details about what specifically goes on within the code can be found within the comments on [the file](https://github.com/isabelleviraldo/rgb_points/blob/main/rgb_points/color_objects_using_center.py)
 
-## Todo
+## TODO
+
+As mentioned within the specifics of each node, there are a few items that should be looked into.
+
+1. Neither the initial attempt or the fixed math project the colors to the point as intended, theyre both inaccurate in their own ways, and if there is going to be a method to find the color of each individual point, then there should be some thought that goes into reconstructing that code.
+2. The adjustments made within the math to account for the linear offset should be re-measeured, because the mount frame adds some distance especially in the z direction (up and down)
+3. For picking colors a few at a time, there could be a way to adjust for how large the object is to adjust how many colors it chooses to color the object with. This could be useful when making sure that the framerate is ideal.
+4. Another avenue for adding use to the object detection would be to take the averages of all the points' colors and color the whole object using that average, this could allow for a more accurate single color for the object, but would also require a lot of computation, so would likely need to be used in tandem with a reduced color picker to remain computationally light for the output of objects with only one color.
