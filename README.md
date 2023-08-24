@@ -75,7 +75,7 @@ To run rgb_points, you can also build
 
 This Dockerfile will setup an environment for rgb_points to run in by building off of a ROS Humble base in Ubuntu 22.04, and install all of the dependencies necessary
 
-As always, to build a Dockerfile you want to put it in it's own folder, and cd to that folder, after that, just do:
+As always, to build a Dockerfile you want to put it in it's own folder, after cd-ing to that folder, just do:
 
 ```sh
 $ docker build -t <container_name> .
@@ -195,7 +195,7 @@ To note, you want to frequently check that you never accidentally call for a pix
 
 Additionally, always make sure that it is cast as an int before attempting to find the pixel in the array.
 
-Like said before in initial_attempt, this math produces a less accurate projection, it could be due to some coding oversight, or something inherently wrong with the concept. Some investigation is needed to determine why, because I could not figure it out myself..
+Like said before in initial_attempt, this math produces a less accurate projection, it could be due to some coding oversight, or something inherently wrong with the concept. Some investigation is needed to determine why, because I could not figure it out myself.
 
 All later nodes use this math, because it actually completes the math as intended within the code, even with the higher quality output by the initial attempt.
 
@@ -253,4 +253,4 @@ As mentioned within the specifics of each node, there are a few items that shoul
 2. The adjustments made within the math to account for the linear offset should be re-measured, because the mount frame adds some distance especially in the z direction (up and down)
 3. For picking colors a few at a time, there could be a way to adjust for how large the object is to adjust how many colors it chooses to color the object with. This could be useful when making sure that the framerate is ideal.
 4. Another avenue for adding use to the object detection would be to take the averages of all the points' colors and color the whole object using that average, this could allow for a more accurate single color for the object, but would also require a lot of computation, so would likely need to be used in tandem with a reduced color picker to remain computationally light for the output of objects with only one color.
-5. As always, this could be optimised greatly, there are many points where there are ineffeciencies, however as goes with any project, and there are more pressing matters to be taken care of first.
+5. As always, this could be optimised greatly, there are many points where there are ineffeciencies, as goes with any project, and there are more pressing matters to be taken care of first.
